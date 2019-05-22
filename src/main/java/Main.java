@@ -13,7 +13,9 @@ class Manager{
     public int numberOpen;
     public int totalSum;
     public boolean log;
+    public ArrayList<String> errors;
     public Manager(boolean l){
+        errors=new ArrayList<>();
         log=l;
     }
     public ArrayList<String> readFile(String name,String type) throws IOException, InterruptedException {
@@ -31,7 +33,13 @@ class Manager{
             else{
                 cor=this.checkCorrectPay(st);
             }
-            result.add(st+" "+formatForDateNow.format(date));
+            if(!cor){
+                st=("inv".equals(type)?"I ":"P ")+st;
+                errors.add(st);
+            }
+            else{
+                result.add(st+" "+formatForDateNow.format(date));
+            }
         }
         return result;
     }
@@ -78,7 +86,7 @@ class Manager{
         Files.write(Paths.get(file), "----------------------\n".getBytes(), StandardOpenOption.APPEND);
     }
     public void writeMasterJustInv(ArrayList<String> invs,String file) throws IOException, InterruptedException {
-        Files.write(Paths.get(file), "just invoices\n".getBytes(), StandardOpenOption.APPEND);
+        Files.write(Paths.get(file), "Just invoices\n".getBytes(), StandardOpenOption.APPEND);
         for (int i = 0; i < invs.size(); i++) {
             String[] inv=invs.get(i).split(" ");
             this.changeStat(Integer.parseInt(inv[1]),Integer.parseInt(inv[1]));
@@ -86,6 +94,17 @@ class Manager{
             Files.write(Paths.get(file), (out+"\n").getBytes(), StandardOpenOption.APPEND);
         }
         Files.write(Paths.get(file), "----------------------\n".getBytes(), StandardOpenOption.APPEND);
+    }
+    public void writeMasterErrors(String file) throws IOException {
+        if(this.errors.size()!=0){
+            Files.write(Paths.get(file), "Invoices/Payments with errors:\n".getBytes(), StandardOpenOption.APPEND);
+            for (int i = 0; i < errors.size(); i++) {
+                String s =  errors.get(i);
+                Files.write(Paths.get(file),("Error in string "+s+"\n").getBytes(), StandardOpenOption.APPEND);
+            }
+            Files.write(Paths.get(file), "----------------------\n".getBytes(), StandardOpenOption.APPEND);
+        }
+
     }
     public void writeMasterStat(String file) throws IOException {
         if(this.log){
@@ -150,6 +169,7 @@ public class Main {
             }
         }
         m.writeMasterJustInv(invWithoutPay,"MASTER.txt");
+        m.writeMasterErrors("MASTER.txt");
         m.writeMasterStat("MASTER.txt");
     }
 }
