@@ -38,7 +38,24 @@ class Manager{
     public boolean checkCorrectInv(String st){
         String[] all=st.split(" ");
         if(all.length!=2) return false;
-
+        try{
+            int temp=Integer.parseInt(all[1]);
+        }
+        catch(NumberFormatException e){
+            return false;
+        }
+        return true;
+    }
+    public boolean checkCorrectPay(String st){
+        String[] all=st.split(" ");
+        if(all.length!=3) return false;
+        try{
+            int temp=Integer.parseInt(all[1]);
+        }
+        catch(NumberFormatException e){
+            return false;
+        }
+        return true;
     }
     public void clearMaster(String file) throws IOException {
         Files.write(Paths.get(file), "".getBytes());
