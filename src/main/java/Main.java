@@ -14,8 +14,12 @@ class Manager{
     public int totalSum;
     public boolean log;
     public ArrayList<String> errors;
+    public ArrayList<String> numbersPay;
+    public ArrayList<String> numbersInv;
     public Manager(boolean l){
         errors=new ArrayList<>();
+        numbersPay=new ArrayList<>();
+        numbersInv=new ArrayList<>();
         log=l;
     }
     public ArrayList<String> readFile(String name,String type) throws IOException, InterruptedException {
@@ -52,6 +56,12 @@ class Manager{
         catch(NumberFormatException e){
             return false;
         }
+        if(this.numbersInv.indexOf(all[0])==-1){
+            this.numbersInv.add(all[0]);
+        }
+        else{
+            return false;
+        }
         return true;
     }
     public boolean checkCorrectPay(String st){
@@ -61,6 +71,12 @@ class Manager{
             int temp=Integer.parseInt(all[1]);
         }
         catch(NumberFormatException e){
+            return false;
+        }
+        if(this.numbersPay.indexOf(all[0])==-1){
+            this.numbersPay.add(all[0]);
+        }
+        else{
             return false;
         }
         return true;
@@ -147,6 +163,7 @@ public class Main {
         m.clearMaster("MASTER.txt");
         ArrayList<String> invoices=m.readFile("INVOICE.txt","inv");
         ArrayList<String> payments=m.readFile("PAYMENT.txt","pay");
+        System.out.println(m.numbersInv+" "+m.numbersPay);
         ArrayList<String> invWithoutPay=new ArrayList<>();
         for (int i = 0; i < invoices.size(); i++) {
             String inv=invoices.get(i);
