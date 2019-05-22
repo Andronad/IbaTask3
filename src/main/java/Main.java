@@ -84,7 +84,7 @@ class Manager{
     public void clearMaster(String file) throws IOException {
         Files.write(Paths.get(file), "".getBytes());
     }
-    public void writeMaster(String inv,ArrayList<String> pays,String file) throws InterruptedException, IOException {
+    public void writeMaster(String inv,ArrayList<String> pays,String file) throws IOException {
         String[] invs=inv.split(" ");
         int sum=Integer.parseInt(invs[1]);
         int curSum=this.getCurrentBalance(sum,pays);
@@ -101,7 +101,7 @@ class Manager{
         }
         Files.write(Paths.get(file), "----------------------\n".getBytes(), StandardOpenOption.APPEND);
     }
-    public void writeMasterJustInv(ArrayList<String> invs,String file) throws IOException, InterruptedException {
+    public void writeMasterJustInv(ArrayList<String> invs,String file) throws IOException {
         Files.write(Paths.get(file), "Just invoices\n".getBytes(), StandardOpenOption.APPEND);
         for (int i = 0; i < invs.size(); i++) {
             String[] inv=invs.get(i).split(" ");
@@ -163,12 +163,11 @@ public class Main {
         m.clearMaster("MASTER.txt");
         ArrayList<String> invoices=m.readFile("INVOICE.txt","inv");
         ArrayList<String> payments=m.readFile("PAYMENT.txt","pay");
-        System.out.println(m.numbersInv+" "+m.numbersPay);
         ArrayList<String> invWithoutPay=new ArrayList<>();
         for (int i = 0; i < invoices.size(); i++) {
             String inv=invoices.get(i);
             String[] invs=inv.split(" ");
-            Boolean flag=false;
+            boolean flag=false;
             ArrayList<String> payForInv=new ArrayList<>();
             for (int j = 0; j < payments.size(); j++) {
                 String pay=payments.get(j);
